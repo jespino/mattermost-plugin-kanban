@@ -1,14 +1,59 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
+import {PropTypes} from 'prop-types';
 import {Link} from 'react-router-dom';
-import Board from 'react-trello'
+import Board from 'react-trello';
 
 import {id as pluginId} from './manifest';
 
 const data = {};
 
+function KanbanCard(props) {
+    return (
+        <div>
+            <header
+                style={{
+                    borderBottom: '1px solid #eee',
+                    paddingBottom: 6,
+                    marginBottom: 10,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                }}
+            >
+                <div style={{fontSize: 14, fontWeight: 'bold'}}>{props.title}</div>
+                <div style={{fontSize: 11}}>{props.label}</div>
+            </header>
+            <div style={{fontSize: 12, color: '#BD3B36'}}>
+                <div style={{padding: '5px 0px'}}>
+                    <i>{props.description}</i>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 class Kanban extends Component {
+    static propTypes = {
+        teamName: PropTypes.string.isRequired,
+        channelName: PropTypes.string,
+    }
+
+    onChange = (newData) => {
+        if (this.props.channelName) {
+            data[this.props.channelName] = newData;
+        } else {
+            data['@' + this.props.teamName] = newData;
+        }
+    }
+
     render() {
-        const channelData = data[this.props.channelName] || {lanes: [
+        let boardData = null;
+        if (this.props.channelName) {
+            boardData = data[this.props.channelName];
+        } else {
+            boardData = data['@' + this.props.teamName];
+        }
+        boardData = boardData || {lanes: [
             {
                 id: 'todo',
                 title: 'ToDo',
@@ -28,20 +73,23 @@ class Kanban extends Component {
         return (
             <Board
                 editable={true}
-                data={channelData}
+                data={boardData}
                 draggable={true}
                 canAddLanes={true}
-                onDataChange={(newData) => {
-                    data[this.props.channelName] = newData;
-                }}
-                onCardAdd={() => {}}
+                onDataChange={this.onChange}
+                hideCardDeleteIcon={false}
+                addLaneTitle={'Add status'}
                 style={{backgroundColor: 'white'}}
-            />
+                customCardLayout={true}
+                addCardLink={<button className='btn btn-primary'>Add Card</button>}
+            >
+                <KanbanCard/>
+            </Board>
         );
     }
 }
 
-function Example(props) {
+function KanbanAppLink(props) {
     return (
         <li>
             <Link
@@ -56,6 +104,10 @@ function Example(props) {
         </li>
     );
 }
+
+KanbanAppLink.propTypes = {
+    teamName: PropTypes.string.isRequired,
+};
 
 export default class Plugin {
     initialize(registry, store, browserHistory) {
@@ -72,7 +124,7 @@ export default class Plugin {
             'Channel Kanban Board',
             'Channel Kanban Board',
         );
-        registry.registerTeamAppComponent(Example);
+        registry.registerTeamAppComponent(KanbanAppLink);
         registry.registerAppCenterComponent('kanban', Kanban);
     }
 }
