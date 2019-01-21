@@ -34,7 +34,8 @@ func (p *Plugin) ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Req
 	router.HandleFunc("/team/{teamId}/lane", func(w http.ResponseWriter, r *http.Request) { p.handleCardCreate(c, w, r) }).Methods("POST")
 	router.HandleFunc("/team/{teamId}/lane", func(w http.ResponseWriter, r *http.Request) { p.handleCardUpdate(c, w, r) }).Methods("PUT")
 	router.HandleFunc("/team/{teamId}/lane", func(w http.ResponseWriter, r *http.Request) { p.handleCardDelete(c, w, r) }).Methods("DELETE")
-	router.HandleFunc("/{channelId}", func(w http.ResponseWriter, r *http.Request) { p.handleGetBoard(c, w, r) }).Methods("GET")
+	router.HandleFunc("/c-{channelId}", func(w http.ResponseWriter, r *http.Request) { p.handleGetBoard(c, w, r) }).Methods("GET")
+	router.HandleFunc("/t-{teamId}", func(w http.ResponseWriter, r *http.Request) { p.handleGetBoard(c, w, r) }).Methods("GET")
 	w.Header().Set("Content-Type", "application/json")
 	router.ServeHTTP(w, r)
 }

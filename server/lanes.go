@@ -11,14 +11,14 @@ import (
 )
 
 type Lane struct {
-	ID           string           `json:id`
-	Title        string           `json:title`
-	Data         json.RawMessage  `json:data`
-	Cards        map[string]*Card `json:cards`
-	Creator      string           `json:author`
-	UpdatedAt    int64            `json:updated_at`
-	CreatedAt    int64            `json:created_at`
-	OrderedCards []string         `json:ordered_cards`
+	ID           string           `json:"id"`
+	Title        string           `json:"title"`
+	Data         json.RawMessage  `json:"data"`
+	Cards        map[string]*Card `json:"cards"`
+	Creator      string           `json:"creator"`
+	UpdatedAt    int64            `json:"updated_at"`
+	CreatedAt    int64            `json:"created_at"`
+	OrderedCards []string         `json:"ordered_cards"`
 }
 
 func (lane *Lane) ToJson() string {

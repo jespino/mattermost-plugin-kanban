@@ -10,9 +10,9 @@ import (
 )
 
 type Board struct {
-	ID           string           `json:id`
-	Lanes        map[string]*Lane `json:lanes`
-	OrderedLanes []string         `json:ordered_lanes`
+	ID           string           `json:"id"`
+	Lanes        map[string]*Lane `json:"lanes"`
+	OrderedLanes []string         `json:"ordered_lanes"`
 }
 
 func (board *Board) ToJson() string {
@@ -34,26 +34,13 @@ func (p *Plugin) handleGetBoard(c *plugin.Context, w http.ResponseWriter, r *htt
 		return
 	}
 
-	lane := LaneFromJson(r.Body)
-	if lane == nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid lane"))
-		return
-	}
-
 	board, err := p.getBoardFromRequest(r)
 	if err != nil {
-		if err.StatusCode == http.StatusNotFound {
-			var err2 *model.AppError
-			board, err2 = p.createEmptyBoard(c, r)
-			if err2 != nil {
-				w.WriteHeader(err.StatusCode)
-				w.Write([]byte(err.Message))
-				return
-			}
-		} else {
-			w.WriteHeader(err.StatusCode)
-			w.Write([]byte(err.Message))
+		var err2 *model.AppError
+		board, err2 = p.createEmptyBoard(c, r)
+		if err2 != nil {
+			w.WriteHeader(err2.StatusCode)
+			w.Write([]byte(err2.Message))
 			return
 		}
 	}

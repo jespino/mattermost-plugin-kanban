@@ -11,14 +11,14 @@ import (
 )
 
 type Card struct {
-	ID          string          `json:id`
-	LaneID      string          `json:lane_id`
-	Title       string          `json:title`
-	Description string          `json:description`
-	Creator     string          `json:author`
-	UpdatedAt   int64           `json:updated_at`
-	CreatedAt   int64           `json:created_at`
-	Data        json.RawMessage `json:data`
+	ID          string          `json:"id"`
+	LaneID      string          `json:"lane_id"`
+	Title       string          `json:"title"`
+	Description string          `json:"description"`
+	Creator     string          `json:"creator"`
+	UpdatedAt   int64           `json:"updated_at"`
+	CreatedAt   int64           `json:"created_at"`
+	Data        json.RawMessage `json:"data"`
 }
 
 func (card *Card) ToJson() string {
@@ -42,8 +42,8 @@ func (p *Plugin) handleCardCreate(c *plugin.Context, w http.ResponseWriter, r *h
 
 	session, err := p.API.GetSession(c.SessionId)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("Invalid session"))
+		w.WriteHeader(err.StatusCode)
+		w.Write([]byte(err.Message))
 		return
 	}
 
