@@ -5,6 +5,8 @@ import {Link} from 'react-router-dom';
 import {id as pluginId} from './manifest';
 
 import reducer from './reducer';
+import {getBoard} from './selectors';
+import {getTeamBoard, getChannelBoard} from './actions';
 
 import Kanban from './kanban';
 
@@ -46,6 +48,19 @@ export default class Plugin {
         registry.registerTeamAppComponent(KanbanAppLink);
         registry.registerAppCenterComponent('kanban', Kanban);
         registry.registerReducer(reducer);
+        registry.registerWebSocketEventHandler(
+            'custom_' + pluginId + '_board_changed',
+            (message) => {
+                const s = store.getState();
+                if (message.data.boardId === (getBoard(s) || {}).id) {
+                    if (message.data.channelId) {
+                        store.dispatch(getChannelBoard(message.data.channelId));
+                    } else {
+                        store.dispatch(getTeamBoard(message.data.teamId));
+                    }
+                }
+            },
+        );
     }
 }
 

@@ -80,6 +80,7 @@ func (p *Plugin) saveBoard(r *http.Request, board *Board) *model.AppError {
 			return model.NewAppError("kanban-plugin", "Unable to save the board data", nil, "", http.StatusInternalServerError)
 		}
 	}
+	p.emitBoardChange(teamID, channelID, board.ID)
 	return nil
 }
 
@@ -144,4 +145,12 @@ func (p *Plugin) createEmptyBoard(c *plugin.Context, r *http.Request) (*Board, *
 		}
 	}
 	return &board, nil
+}
+
+func (p *Plugin) emitBoardChange(teamID, channelID, boardID string) {
+	p.API.PublishWebSocketEvent("board_changed", map[string]interface{}{
+		"boardId":   boardID,
+		"teamId":    teamID,
+		"channelId": channelID,
+	}, &model.WebsocketBroadcast{})
 }

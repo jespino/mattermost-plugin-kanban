@@ -74,8 +74,3 @@ export const getTeamBoard = (teamId) => async (dispatch, getState) => {
 export const createChannelCard = (channelId, card) => async (dispatch, getState) => {
     doPost(getPluginServerRoute(getState()) + '/channel/' + channelId + '/card', card);
 };
-
-export const websocketBoardChanged = (message) => (dispatch) => dispatch({
-    type: BOARD_CHANGED,
-    data: message.data,
-});
