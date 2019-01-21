@@ -4,14 +4,14 @@ import {getChannelByName} from 'mattermost-redux/selectors/entities/channels';
 import {getTeamByName} from 'mattermost-redux/selectors/entities/teams';
 
 import {getBoard} from '../selectors';
-import {getChannelBoard, getTeamBoard, createChannelCard} from '../actions';
+import {getChannelBoard, getTeamBoard, createChannelCard, createTeamCard} from '../actions';
 
 import Kanban from './kanban';
 
 function mapStateToProps(state, ownProps) {
     return {
-        channelId: getChannelByName(state, ownProps.channelName).id,
-        teamId: getTeamByName(state, ownProps.teamName).id,
+        channelId: (getChannelByName(state, ownProps.channelName) || {}).id,
+        teamId: (getTeamByName(state, ownProps.teamName) || {}).id,
         board: getBoard(state),
     };
 }
@@ -22,6 +22,7 @@ function mapDispatchToProps(dispatch) {
             getChannelBoard,
             getTeamBoard,
             createChannelCard,
+            createTeamCard,
         }, dispatch),
     };
 }

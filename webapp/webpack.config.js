@@ -20,6 +20,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
+                        sourceMaps: true,
                         presets: [
                             ['@babel/preset-env', {
                                 targets: {

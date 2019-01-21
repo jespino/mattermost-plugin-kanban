@@ -2,30 +2,7 @@ import React, {Component} from 'react';
 import {PropTypes} from 'prop-types';
 import Board from 'react-trello';
 
-function KanbanCard(props) {
-    return (
-        <div>
-            <header
-                style={{
-                    borderBottom: '1px solid #eee',
-                    paddingBottom: 6,
-                    marginBottom: 10,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                }}
-            >
-                <div style={{fontSize: 14, fontWeight: 'bold'}}>{props.title}</div>
-                <div style={{fontSize: 11}}>{props.label}</div>
-            </header>
-            <div style={{fontSize: 12, color: '#BD3B36'}}>
-                <div style={{padding: '5px 0px'}}>
-                    <i>{props.description}</i>
-                </div>
-            </div>
-        </div>
-    );
-}
+import Card from './card';
 
 export default class Kanban extends Component {
     static propTypes = {
@@ -38,6 +15,7 @@ export default class Kanban extends Component {
             getChannelBoard: PropTypes.func.isRequired,
             getTeamBoard: PropTypes.func.isRequired,
             createChannelCard: PropTypes.func.isRequired,
+            createTeamCard: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -45,7 +23,17 @@ export default class Kanban extends Component {
         if (this.props.channelId) {
             this.props.actions.getChannelBoard(this.props.channelId);
         } else {
-            this.props.actions.getChannelBoard(this.props.teamId);
+            this.props.actions.getTeamBoard(this.props.teamId);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.channelId !== this.props.channelId || prevProps.teamId !== this.props.teamId) {
+            if (this.props.channelId) {
+                this.props.actions.getChannelBoard(this.props.channelId);
+            } else {
+                this.props.actions.getTeamBoard(this.props.teamId);
+            }
         }
     }
 
@@ -94,7 +82,7 @@ export default class Kanban extends Component {
                 addCardLink={<button className='btn btn-primary'>{'Add Card'}</button>}
                 onCardAdd={this.onCardAdd}
             >
-                <KanbanCard/>
+                <Card/>
             </Board>
         );
     }

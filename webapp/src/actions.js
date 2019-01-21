@@ -74,3 +74,7 @@ export const getTeamBoard = (teamId) => async (dispatch, getState) => {
 export const createChannelCard = (channelId, card) => async (dispatch, getState) => {
     doPost(getPluginServerRoute(getState()) + '/channel/' + channelId + '/card', card);
 };
+
+export const createTeamCard = (teamId, card) => async (dispatch, getState) => {
+    doPost(getPluginServerRoute(getState()) + '/team/' + teamId + '/card', card);
+};
