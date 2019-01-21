@@ -126,3 +126,12 @@ export const moveChannelLane = (channelId, laneId, position) => async (dispatch,
 export const moveTeamLane = (teamId, laneId, position) => async (dispatch, getState) => {
     doPost(getPluginServerRoute(getState()) + '/team/' + teamId + '/lane/' + laneId + '/move', {position});
 };
+
+export const deleteChannelLane = (channelId, laneId) => async (dispatch, getState) => {
+    doDelete(getPluginServerRoute(getState()) + '/channel/' + channelId + '/lane/' + laneId);
+};
+
+export const deleteTeamLane = (teamId, laneId) => async (dispatch, getState) => {
+    doDelete(getPluginServerRoute(getState()) + '/team/' + teamId + '/lane/' + laneId);
+};
+

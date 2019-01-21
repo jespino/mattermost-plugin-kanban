@@ -76,6 +76,7 @@ func (p *Plugin) handleLaneCreate(c *plugin.Context, w http.ResponseWriter, r *h
 	lane.CreatedAt = time.Now().Unix()
 	lane.UpdatedAt = time.Now().Unix()
 	lane.Creator = session.UserId
+	lane.Cards = make(map[string]*Card, 0)
 	board.Lanes[lane.ID] = lane
 	board.OrderedLanes = append(board.OrderedLanes, lane.ID)
 

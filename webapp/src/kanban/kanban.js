@@ -4,6 +4,7 @@ import Board from 'react-trello';
 
 import Card from './card';
 import CreateLaneModal from './create_lane_modal';
+import ConfirmModal from './confirm_modal';
 
 export default class Kanban extends Component {
     static propTypes = {
@@ -30,6 +31,9 @@ export default class Kanban extends Component {
 
     state = {
         creatingLane: false,
+        deletingCard: false,
+        deletingCardId: null,
+        deletingCardLaneId: null,
     }
 
     componentDidMount() {
@@ -76,12 +80,29 @@ export default class Kanban extends Component {
         }
     }
 
-    onCardDelete = (cardId, laneId) => {
+    openDeletingCardModal = (cardId, laneId) => {
+        this.setState({
+            deletingCard: true,
+            deletingCardId: cardId,
+            deletingCardLaneId: laneId,
+        });
+    }
+
+    closeDeletingCardModal = () => {
+        this.setState({
+            deletingCard: false,
+            deletingCardId: null,
+            deletingCardLaneId: null,
+        });
+    }
+
+    deleteCard = () => {
         if (this.props.channelId) {
-            this.props.actions.deleteChannelCard(this.props.channelId, laneId, cardId);
+            this.props.actions.deleteChannelCard(this.props.channelId, this.state.deletingCardLaneId, this.state.deletingCardId);
         } else {
-            this.props.actions.deleteTeamCard(this.props.teamId, laneId, cardId);
+            this.props.actions.deleteTeamCard(this.props.teamId, this.state.deletingCardLaneId, this.state.deletingCardId);
         }
+        this.closeDeletingCardModal();
     }
 
     onDropCard = (cardId, sourceLaneId, targetLaneId, position) => {
@@ -145,6 +166,13 @@ export default class Kanban extends Component {
                     onClose={this.closeCreatingLaneModal}
                     onCreate={this.createLane}
                 />
+                <ConfirmModal
+                    title='Delete card'
+                    text='Are you sure you want to delete this card?'
+                    show={this.state.deletingCard}
+                    onClose={this.closeDeletingCardModal}
+                    onAccept={this.deleteCard}
+                />
                 <Board
                     editable={true}
                     data={this.reformatBoard(this.props.board)}
@@ -157,11 +185,11 @@ export default class Kanban extends Component {
                     customCardLayout={true}
                     addCardLink={addCardLink}
                     onCardAdd={this.onCardAdd}
-                    onCardDelete={this.onCardDelete}
+                    onCardDelete={this.openDeletingCardModal}
                     handleDragEnd={this.onDropCard}
                     handleLaneDragEnd={this.onDropLane}
                 >
-                    <Card onDeleteClicked={this.onCardDelete}/>
+                    <Card onDeleteClicked={this.openDeletingCardModal}/>
                 </Board>
             </div>
         );
