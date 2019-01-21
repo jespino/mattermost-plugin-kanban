@@ -3,6 +3,7 @@ import {PropTypes} from 'prop-types';
 import Board from 'react-trello';
 
 import Card from './card';
+import CreateLaneModal from './create_lane_modal';
 
 export default class Kanban extends Component {
     static propTypes = {
@@ -16,7 +17,19 @@ export default class Kanban extends Component {
             getTeamBoard: PropTypes.func.isRequired,
             createChannelCard: PropTypes.func.isRequired,
             createTeamCard: PropTypes.func.isRequired,
+            deleteChannelCard: PropTypes.func.isRequired,
+            deleteTeamCard: PropTypes.func.isRequired,
+            moveChannelCard: PropTypes.func.isRequired,
+            moveTeamCard: PropTypes.func.isRequired,
+            createChannelLane: PropTypes.func.isRequired,
+            createTeamLane: PropTypes.func.isRequired,
+            moveChannelLane: PropTypes.func.isRequired,
+            moveTeamLane: PropTypes.func.isRequired,
         }).isRequired,
+    }
+
+    state = {
+        creatingLane: false,
     }
 
     componentDidMount() {
@@ -63,27 +76,94 @@ export default class Kanban extends Component {
         }
     }
 
+    onCardDelete = (cardId, laneId) => {
+        if (this.props.channelId) {
+            this.props.actions.deleteChannelCard(this.props.channelId, laneId, cardId);
+        } else {
+            this.props.actions.deleteTeamCard(this.props.teamId, laneId, cardId);
+        }
+    }
+
+    onDropCard = (cardId, sourceLaneId, targetLaneId, position) => {
+        if (this.props.channelId) {
+            this.props.actions.moveChannelCard(this.props.channelId, cardId, sourceLaneId, targetLaneId, position);
+        } else {
+            this.props.actions.moveTeamCard(this.props.teamId, cardId, sourceLaneId, targetLaneId, position);
+        }
+    }
+
+    onDropLane = (oldPosition, newPosition, lane) => {
+        if (this.props.channelId) {
+            this.props.actions.moveChannelLane(this.props.channelId, lane.id, newPosition);
+        } else {
+            this.props.actions.moveTeamLane(this.props.teamId, lane.id, newPosition);
+        }
+    }
+
+    openCreatingLaneModal = () => {
+        this.setState({creatingLane: true});
+    }
+
+    closeCreatingLaneModal = () => {
+        this.setState({creatingLane: false});
+    }
+
+    createLane = (name) => {
+        const lane = {title: name};
+        if (this.props.channelId) {
+            this.props.actions.createChannelLane(this.props.channelId, lane);
+        } else {
+            this.props.actions.createTeamLane(this.props.teamId, lane);
+        }
+    }
+
     render() {
         if (this.props.board === null) {
             return null;
         }
 
-        return (
-            <Board
-                editable={true}
-                data={this.reformatBoard(this.props.board)}
-                draggable={true}
-                canAddLanes={true}
-                onDataChange={this.onChange}
-                hideCardDeleteIcon={false}
-                addLaneTitle={'Add status'}
-                style={{backgroundColor: 'white'}}
-                customCardLayout={true}
-                addCardLink={<button className='btn btn-primary'>{'Add Card'}</button>}
-                onCardAdd={this.onCardAdd}
+        const addCardLink = (
+            <button
+                className='btn btn-primary'
+                style={{float: 'right', marginTop: 10}}
             >
-                <Card/>
-            </Board>
+                {'Add Card'}
+            </button>
+        );
+
+        return (
+            <div>
+                <button
+                    className='btn btn-primary'
+                    style={{float: 'right', margin: 10}}
+                    onClick={this.openCreatingLaneModal}
+                >
+                    {'Add Lane'}
+                </button>
+                <CreateLaneModal
+                    show={this.state.creatingLane}
+                    onClose={this.closeCreatingLaneModal}
+                    onCreate={this.createLane}
+                />
+                <Board
+                    editable={true}
+                    data={this.reformatBoard(this.props.board)}
+                    draggable={true}
+                    canAddLanes={true}
+                    onDataChange={this.onChange}
+                    hideCardDeleteIcon={false}
+                    addLaneTitle={'Add status'}
+                    style={{backgroundColor: 'white'}}
+                    customCardLayout={true}
+                    addCardLink={addCardLink}
+                    onCardAdd={this.onCardAdd}
+                    onCardDelete={this.onCardDelete}
+                    handleDragEnd={this.onDropCard}
+                    handleLaneDragEnd={this.onDropLane}
+                >
+                    <Card onDeleteClicked={this.onCardDelete}/>
+                </Board>
+            </div>
         );
     }
 }

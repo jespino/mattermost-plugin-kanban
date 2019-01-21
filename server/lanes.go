@@ -6,9 +6,14 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/mattermost/mattermost-server/model"
 	"github.com/mattermost/mattermost-server/plugin"
 )
+
+type LaneMovement struct {
+	Position int `json:"position"`
+}
 
 type Lane struct {
 	ID           string           `json:"id"`
@@ -30,6 +35,12 @@ func LaneFromJson(data io.Reader) *Lane {
 	var lane *Lane
 	json.NewDecoder(data).Decode(&lane)
 	return lane
+}
+
+func LaneMovementFromJson(data io.Reader) *LaneMovement {
+	var laneMovement *LaneMovement
+	json.NewDecoder(data).Decode(&laneMovement)
+	return laneMovement
 }
 
 func (p *Plugin) handleLaneCreate(c *plugin.Context, w http.ResponseWriter, r *http.Request) {
@@ -116,7 +127,7 @@ func (p *Plugin) handleLaneUpdate(c *plugin.Context, w http.ResponseWriter, r *h
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(lane.ToJson()))
 }
 
@@ -163,6 +174,56 @@ func (p *Plugin) handleLaneDelete(c *plugin.Context, w http.ResponseWriter, r *h
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(lane.ToJson()))
+	w.WriteHeader(http.StatusNoContent)
+	w.Write([]byte(""))
+}
+
+func (p *Plugin) handleLaneMove(c *plugin.Context, w http.ResponseWriter, r *http.Request) {
+	err := p.validateRequest(c, r)
+	if err != nil {
+		w.WriteHeader(err.StatusCode)
+		w.Write([]byte(err.Message))
+		return
+	}
+
+	vars := mux.Vars(r)
+	laneID, laneOk := vars["laneId"]
+
+	if !laneOk {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Card not found"))
+		return
+	}
+
+	laneMovement := LaneMovementFromJson(r.Body)
+	if laneMovement == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Invalid lane movement"))
+		return
+	}
+
+	board, err := p.getBoardFromRequest(r)
+	if err != nil {
+		w.WriteHeader(err.StatusCode)
+		w.Write([]byte(err.Message))
+		return
+	}
+
+	newOrderedLanes := []string{}
+	for _, orderedLaneID := range board.OrderedLanes {
+		if orderedLaneID != laneID {
+			newOrderedLanes = append(newOrderedLanes, orderedLaneID)
+		}
+	}
+	board.OrderedLanes = append(newOrderedLanes[:laneMovement.Position], append([]string{laneID}, newOrderedLanes[laneMovement.Position:]...)...)
+
+	err = p.saveBoard(r, board)
+	if err != nil {
+		w.WriteHeader(err.StatusCode)
+		w.Write([]byte(err.Message))
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+	w.Write([]byte(""))
 }

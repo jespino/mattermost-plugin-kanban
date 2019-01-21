@@ -38,6 +38,22 @@ const doPost = async (url, body, headers = {}) => {
     }
 };
 
+const doDelete = async (url, headers = {}) => {
+    headers['X-Requested-With'] = 'XMLHttpRequest';
+    headers['X-Timezone-Offset'] = new Date().getTimezoneOffset();
+
+    try {
+        const response = await request.
+            delete(url).
+            set(headers).
+            type('application/json').
+            accept('application/json');
+        return response.body;
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const getPluginServerRoute = (state) => {
     const config = getConfig(state);
 
@@ -77,4 +93,36 @@ export const createChannelCard = (channelId, card) => async (dispatch, getState)
 
 export const createTeamCard = (teamId, card) => async (dispatch, getState) => {
     doPost(getPluginServerRoute(getState()) + '/team/' + teamId + '/card', card);
+};
+
+export const deleteChannelCard = (channelId, laneId, cardId) => async (dispatch, getState) => {
+    doDelete(getPluginServerRoute(getState()) + '/channel/' + channelId + '/card/' + laneId + '/' + cardId);
+};
+
+export const deleteTeamCard = (teamId, laneId, cardId) => async (dispatch, getState) => {
+    doDelete(getPluginServerRoute(getState()) + '/team/' + teamId + '/card/' + laneId + '/' + cardId);
+};
+
+export const moveChannelCard = (channelId, cardId, sourceLaneId, targetLaneId, position) => async (dispatch, getState) => {
+    doPost(getPluginServerRoute(getState()) + '/channel/' + channelId + '/card/' + cardId + '/move', {sourceLaneId, targetLaneId, position});
+};
+
+export const moveTeamCard = (teamId, cardId, sourceLaneId, targetLaneId, position) => async (dispatch, getState) => {
+    doPost(getPluginServerRoute(getState()) + '/team/' + teamId + '/card/' + cardId + '/move', {sourceLaneId, targetLaneId, position});
+};
+
+export const createChannelLane = (channelId, lane) => async (dispatch, getState) => {
+    doPost(getPluginServerRoute(getState()) + '/channel/' + channelId + '/lane', lane);
+};
+
+export const createTeamLane = (teamId, lane) => async (dispatch, getState) => {
+    doPost(getPluginServerRoute(getState()) + '/team/' + teamId + '/lane', lane);
+};
+
+export const moveChannelLane = (channelId, laneId, position) => async (dispatch, getState) => {
+    doPost(getPluginServerRoute(getState()) + '/channel/' + channelId + '/lane/' + laneId + '/move', {position});
+};
+
+export const moveTeamLane = (teamId, laneId, position) => async (dispatch, getState) => {
+    doPost(getPluginServerRoute(getState()) + '/team/' + teamId + '/lane/' + laneId + '/move', {position});
 };

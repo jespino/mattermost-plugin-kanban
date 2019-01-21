@@ -3,13 +3,20 @@ import {PropTypes} from 'prop-types';
 
 export default class Card extends Component {
     static propTypes = {
+        id: PropTypes.string.isRequired,
+        laneId: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         description: PropTypes.string,
         label: PropTypes.string,
+        onDeleteClicked: PropTypes.func,
+    }
+
+    onDeleteClicked = () => {
+        this.props.onDeleteClicked(this.props.id, this.props.laneId);
     }
 
     render() {
-        const {title, label, description} = this.props;
+        const {title, label, description, onDeleteClicked} = this.props;
         return (
             <div>
                 <header
@@ -23,13 +30,21 @@ export default class Card extends Component {
                     }}
                 >
                     <div style={{fontSize: 14, fontWeight: 'bold'}}>{title}</div>
-                    <div style={{fontSize: 11}}>{label}</div>
+                    {onDeleteClicked &&
+                        <div
+                            style={{fontSize: 11}}
+                            onClick={this.onDeleteClicked}
+                        >
+                            {'x'}
+                        </div>}
                 </header>
-                {description &&
+                {(description || label) &&
                     <div style={{fontSize: 12, color: '#BD3B36'}}>
-                        <div style={{padding: 5}}>
-                            <i>{description}</i>
-                        </div>
+                        {label && <div style={{fontSize: 11, backgroundColor: '#ccc', borderRadious: '5px'}}>{label}</div>}
+                        {description &&
+                            <div style={{padding: 5}}>
+                                <i>{description}</i>
+                            </div>}
                     </div>}
             </div>
         );
