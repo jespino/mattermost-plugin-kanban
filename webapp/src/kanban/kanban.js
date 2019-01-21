@@ -6,6 +6,16 @@ import Card from './card';
 import CreateLaneModal from './create_lane_modal';
 import ConfirmModal from './confirm_modal';
 
+function LaneHeader(props) {
+    const {id, title, onDeleteClicked} = props;
+    return (
+        <div style={{display: 'flex'}}>
+            <span style={{flexGrow: 1, fontSize: '1.2em'}}>{title}</span>
+            <a onClick={() => onDeleteClicked(id)}>{'x'}</a>
+        </div>
+    );
+}
+
 export default class Kanban extends Component {
     static propTypes = {
         teamName: PropTypes.string.isRequired,
@@ -26,6 +36,8 @@ export default class Kanban extends Component {
             createTeamLane: PropTypes.func.isRequired,
             moveChannelLane: PropTypes.func.isRequired,
             moveTeamLane: PropTypes.func.isRequired,
+            deleteChannelLane: PropTypes.func.isRequired,
+            deleteTeamLane: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -34,6 +46,8 @@ export default class Kanban extends Component {
         deletingCard: false,
         deletingCardId: null,
         deletingCardLaneId: null,
+        deletingLane: false,
+        deletingLaneId: null,
     }
 
     componentDidMount() {
@@ -105,6 +119,29 @@ export default class Kanban extends Component {
         this.closeDeletingCardModal();
     }
 
+    openDeletingLaneModal = (laneId) => {
+        this.setState({
+            deletingLane: true,
+            deletingLaneId: laneId,
+        });
+    }
+
+    closeDeletingLaneModal = () => {
+        this.setState({
+            deletingLane: false,
+            deletingLaneId: null,
+        });
+    }
+
+    deleteLane = () => {
+        if (this.props.channelId) {
+            this.props.actions.deleteChannelLane(this.props.channelId, this.state.deletingLaneId);
+        } else {
+            this.props.actions.deleteTeamLane(this.props.teamId, this.state.deletingLaneId);
+        }
+        this.closeDeletingLaneModal();
+    }
+
     onDropCard = (cardId, sourceLaneId, targetLaneId, position) => {
         if (this.props.channelId) {
             this.props.actions.moveChannelCard(this.props.channelId, cardId, sourceLaneId, targetLaneId, position);
@@ -173,21 +210,28 @@ export default class Kanban extends Component {
                     onClose={this.closeDeletingCardModal}
                     onAccept={this.deleteCard}
                 />
+                <ConfirmModal
+                    title='Delete lane'
+                    text='Are you sure you want to delete this lane?'
+                    show={this.state.deletingLane}
+                    onClose={this.closeDeletingLaneModal}
+                    onAccept={this.deleteLane}
+                />
                 <Board
                     editable={true}
                     data={this.reformatBoard(this.props.board)}
                     draggable={true}
                     canAddLanes={true}
                     onDataChange={this.onChange}
-                    hideCardDeleteIcon={false}
+                    hideCardDeleteIcon={true}
                     addLaneTitle={'Add status'}
                     style={{backgroundColor: 'white'}}
                     customCardLayout={true}
                     addCardLink={addCardLink}
                     onCardAdd={this.onCardAdd}
-                    onCardDelete={this.openDeletingCardModal}
                     handleDragEnd={this.onDropCard}
                     handleLaneDragEnd={this.onDropLane}
+                    customLaneHeader={<LaneHeader onDeleteClicked={this.openDeletingLaneModal}/>}
                 >
                     <Card onDeleteClicked={this.openDeletingCardModal}/>
                 </Board>

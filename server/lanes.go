@@ -140,10 +140,12 @@ func (p *Plugin) handleLaneDelete(c *plugin.Context, w http.ResponseWriter, r *h
 		return
 	}
 
-	lane := LaneFromJson(r.Body)
-	if lane == nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Invalid lane"))
+	vars := mux.Vars(r)
+	laneID, laneOk := vars["laneId"]
+
+	if !laneOk {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Lane not found"))
 		return
 	}
 
@@ -154,16 +156,16 @@ func (p *Plugin) handleLaneDelete(c *plugin.Context, w http.ResponseWriter, r *h
 		return
 	}
 
-	if _, ok := board.Lanes[lane.ID]; !ok {
+	if _, ok := board.Lanes[laneID]; !ok {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Unable to delete lane: Lane not found"))
 		return
 	}
-	delete(board.Lanes, lane.ID)
+	delete(board.Lanes, laneID)
 	newOrderedLanes := []string{}
-	for _, laneID := range board.OrderedLanes {
-		if laneID != lane.ID {
-			newOrderedLanes = append(newOrderedLanes, laneID)
+	for _, orderedLaneID := range board.OrderedLanes {
+		if orderedLaneID != laneID {
+			newOrderedLanes = append(newOrderedLanes, orderedLaneID)
 		}
 	}
 	board.OrderedLanes = newOrderedLanes
@@ -192,7 +194,7 @@ func (p *Plugin) handleLaneMove(c *plugin.Context, w http.ResponseWriter, r *htt
 
 	if !laneOk {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write([]byte("Card not found"))
+		w.Write([]byte("Lane not found"))
 		return
 	}
 
