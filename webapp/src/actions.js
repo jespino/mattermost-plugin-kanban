@@ -38,6 +38,23 @@ const doPost = async (url, body, headers = {}) => {
     }
 };
 
+const doPut = async (url, body, headers = {}) => {
+    headers['X-Requested-With'] = 'XMLHttpRequest';
+    headers['X-Timezone-Offset'] = new Date().getTimezoneOffset();
+
+    try {
+        const response = await request.
+            put(url).
+            send(body).
+            set(headers).
+            type('application/json').
+            accept('application/json');
+        return response.body;
+    } catch (err) {
+        throw err;
+    }
+};
+
 const doDelete = async (url, headers = {}) => {
     headers['X-Requested-With'] = 'XMLHttpRequest';
     headers['X-Timezone-Offset'] = new Date().getTimezoneOffset();
@@ -135,3 +152,10 @@ export const deleteTeamLane = (teamId, laneId) => async (dispatch, getState) => 
     doDelete(getPluginServerRoute(getState()) + '/team/' + teamId + '/lane/' + laneId);
 };
 
+export const updateChannelLane = (channelId, lane) => async (dispatch, getState) => {
+    doPut(getPluginServerRoute(getState()) + '/channel/' + channelId + '/lane/' + lane.id, lane);
+};
+
+export const updateTeamLane = (teamId, lane) => async (dispatch, getState) => {
+    doPut(getPluginServerRoute(getState()) + '/team/' + teamId + '/lane/' + lane.id, lane);
+};

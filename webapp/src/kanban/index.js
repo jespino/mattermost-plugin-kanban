@@ -8,7 +8,7 @@ import {
     getChannelBoard, getTeamBoard, createChannelCard, createTeamCard,
     deleteChannelCard, deleteTeamCard, moveChannelCard, moveTeamCard,
     createChannelLane, createTeamLane, moveChannelLane, moveTeamLane,
-    deleteChannelLane, deleteTeamLane,
+    deleteChannelLane, deleteTeamLane, updateChannelLane, updateTeamLane,
 } from '../actions';
 
 import Kanban from './kanban';
@@ -38,6 +38,8 @@ function mapDispatchToProps(dispatch) {
             moveTeamLane,
             deleteChannelLane,
             deleteTeamLane,
+            updateChannelLane,
+            updateTeamLane,
         }, dispatch),
     };
 }

@@ -6,16 +6,7 @@ import Card from './card';
 import CreateLaneModal from './create_lane_modal';
 import CreateCardModal from './create_card_modal';
 import ConfirmModal from './confirm_modal';
-
-function LaneHeader(props) {
-    const {id, title, onDeleteClicked} = props;
-    return (
-        <div style={{display: 'flex'}}>
-            <span style={{flexGrow: 1, fontSize: '1.2em'}}>{title}</span>
-            <a onClick={() => onDeleteClicked(id)}>{'x'}</a>
-        </div>
-    );
-}
+import LaneHeader from './lane_header';
 
 export default class Kanban extends Component {
     static propTypes = {
@@ -39,6 +30,8 @@ export default class Kanban extends Component {
             moveTeamLane: PropTypes.func.isRequired,
             deleteChannelLane: PropTypes.func.isRequired,
             deleteTeamLane: PropTypes.func.isRequired,
+            updateChannelLane: PropTypes.func.isRequired,
+            updateTeamLane: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -176,6 +169,16 @@ export default class Kanban extends Component {
         }
     }
 
+    updateLaneTitle = (laneId, newTitle) => {
+        const lane = {...this.props.board.lanes[laneId], title: newTitle};
+        console.log(lane);
+        if (this.props.channelId) {
+            this.props.actions.updateChannelLane(this.props.channelId, lane);
+        } else {
+            this.props.actions.updateTeamLane(this.props.teamId, lane);
+        }
+    }
+
     render() {
         if (this.props.board === null) {
             return null;
@@ -233,7 +236,12 @@ export default class Kanban extends Component {
                     onCardAdd={this.onCardAdd}
                     handleDragEnd={this.onDropCard}
                     handleLaneDragEnd={this.onDropLane}
-                    customLaneHeader={<LaneHeader onDeleteClicked={this.openDeletingLaneModal}/>}
+                    customLaneHeader={
+                        <LaneHeader
+                            onDeleteClicked={this.openDeletingLaneModal}
+                            onUpdateTitle={this.updateLaneTitle}
+                        />
+                    }
                 >
                     <Card onDeleteClicked={this.openDeletingCardModal}/>
                 </Board>

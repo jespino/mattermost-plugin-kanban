@@ -35,7 +35,10 @@ export default class Card extends Component {
                             style={{fontSize: 11}}
                             onClick={this.onDeleteClicked}
                         >
-                            {'x'}
+                            <i
+                                className='fa fa-remove'
+                                title='Remove card'
+                            />
                         </div>}
                 </header>
                 {(description || label) &&
