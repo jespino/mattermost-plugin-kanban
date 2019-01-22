@@ -4,6 +4,7 @@ import Board from 'react-trello';
 
 import Card from './card';
 import CreateLaneModal from './create_lane_modal';
+import CreateCardModal from './create_card_modal';
 import ConfirmModal from './confirm_modal';
 
 function LaneHeader(props) {
@@ -228,6 +229,7 @@ export default class Kanban extends Component {
                     style={{backgroundColor: 'white'}}
                     customCardLayout={true}
                     addCardLink={addCardLink}
+                    newCardTemplate={<CreateCardModal/>}
                     onCardAdd={this.onCardAdd}
                     handleDragEnd={this.onDropCard}
                     handleLaneDragEnd={this.onDropLane}
