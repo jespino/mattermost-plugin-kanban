@@ -46,13 +46,15 @@ export default class CreateLaneModal extends Component {
                     </h4>
                 </Modal.Header>
                 <Modal.Body>
-                    <label htmlFor='create-lane-input'>{'Name: '}</label>
-                    <input
-                        id='create-lane-input'
-                        type='text'
-                        onChange={this.setLaneName}
-                        value={this.state.laneName}
-                    />
+                    <div>
+                        <input
+                            style={{width: '100%', borderRadius: '3px', border: '1px solid #ccc', padding: '5px'}}
+                            type='text'
+                            onChange={this.setLaneName}
+                            value={this.state.laneName}
+                            placeholder='Name'
+                        />
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <button

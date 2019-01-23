@@ -11,7 +11,7 @@ import {
     updateChannelCard, updateTeamCard,
     createChannelLane, createTeamLane, moveChannelLane, moveTeamLane,
     deleteChannelLane, deleteTeamLane, updateChannelLane, updateTeamLane,
-    setAppActive,
+    setAppActive, unsetBoard,
 } from '../actions';
 
 import Kanban from './kanban';
@@ -28,6 +28,7 @@ function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
             setAppActive,
+            unsetBoard,
             selectChannel,
             getChannelBoard,
             getTeamBoard,

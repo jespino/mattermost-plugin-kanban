@@ -3,7 +3,7 @@ import request from 'superagent';
 import {getConfig} from 'mattermost-redux/selectors/entities/general';
 
 import {id as pluginId} from './manifest';
-import {BOARD_CHANGED, SET_APP_ACTIVE} from './action_types';
+import {BOARD_CHANGED, SET_APP_ACTIVE, UNSET_BOARD} from './action_types';
 
 const doGet = async (url, body, headers = {}) => {
     headers['X-Requested-With'] = 'XMLHttpRequest';
@@ -172,5 +172,11 @@ export const setAppActive = (active) => async (dispatch) => {
     dispatch({
         type: SET_APP_ACTIVE,
         data: active,
+    });
+};
+
+export const unsetBoard = () => async (dispatch) => {
+    dispatch({
+        type: UNSET_BOARD,
     });
 };

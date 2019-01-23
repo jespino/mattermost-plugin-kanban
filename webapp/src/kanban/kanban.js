@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {PropTypes} from 'prop-types';
 import Board from 'react-trello';
 
+import LoadingScreen from 'components/loading_screen.jsx';
+
 import Card from './card';
 import CreateLaneModal from './create_lane_modal';
 import CreateOrEditCardModal from './create_or_edit_card_modal';
@@ -17,6 +19,7 @@ export default class Kanban extends Component {
         board: PropTypes.object,
         actions: PropTypes.shape({
             setAppActive: PropTypes.func.isRequired,
+            unsetBoard: PropTypes.func.isRequired,
             selectChannel: PropTypes.func.isRequired,
             getChannelBoard: PropTypes.func.isRequired,
             getTeamBoard: PropTypes.func.isRequired,
@@ -50,6 +53,7 @@ export default class Kanban extends Component {
     }
 
     componentDidMount() {
+        this.props.actions.unsetBoard();
         if (this.props.channelId) {
             this.props.actions.getChannelBoard(this.props.channelId);
             this.props.actions.selectChannel(this.props.channelId);
@@ -63,6 +67,7 @@ export default class Kanban extends Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.channelId !== this.props.channelId || prevProps.teamId !== this.props.teamId) {
+            this.props.actions.unsetBoard();
             if (this.props.channelId) {
                 this.props.actions.getChannelBoard(this.props.channelId);
                 this.props.actions.selectChannel(this.props.channelId);
@@ -76,6 +81,7 @@ export default class Kanban extends Component {
     }
 
     componentWillUnmount() {
+        this.props.actions.unsetBoard();
         this.props.actions.setAppActive('');
     }
 
@@ -209,7 +215,7 @@ export default class Kanban extends Component {
 
     render() {
         if (this.props.board === null) {
-            return null;
+            return <LoadingScreen/>;
         }
 
         const addCardLink = (
