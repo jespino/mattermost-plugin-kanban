@@ -7,6 +7,7 @@ import {getBoard} from '../selectors';
 import {
     getChannelBoard, getTeamBoard, createChannelCard, createTeamCard,
     deleteChannelCard, deleteTeamCard, moveChannelCard, moveTeamCard,
+    updateChannelCard, updateTeamCard,
     createChannelLane, createTeamLane, moveChannelLane, moveTeamLane,
     deleteChannelLane, deleteTeamLane, updateChannelLane, updateTeamLane,
 } from '../actions';
@@ -30,6 +31,8 @@ function mapDispatchToProps(dispatch) {
             createTeamCard,
             deleteChannelCard,
             deleteTeamCard,
+            updateChannelCard,
+            updateTeamCard,
             moveChannelCard,
             moveTeamCard,
             createChannelLane,

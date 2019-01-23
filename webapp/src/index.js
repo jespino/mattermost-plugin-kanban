@@ -19,7 +19,7 @@ function KanbanAppLink(props) {
             >
                 <span className='icon'><i className='fa fa-trello'/></span>
                 <span className='sidebar-item__name'>
-                    <span>{'Kanban'}</span>
+                    <span>{'Team Kanban'}</span>
                 </span>
             </Link>
         </li>

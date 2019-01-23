@@ -120,6 +120,14 @@ export const deleteTeamCard = (teamId, laneId, cardId) => async (dispatch, getSt
     doDelete(getPluginServerRoute(getState()) + '/team/' + teamId + '/card/' + laneId + '/' + cardId);
 };
 
+export const updateChannelCard = (channelId, laneId, card) => async (dispatch, getState) => {
+    doPut(getPluginServerRoute(getState()) + '/channel/' + channelId + '/card/' + laneId + '/' + card.id, card);
+};
+
+export const updateTeamCard = (teamId, laneId, card) => async (dispatch, getState) => {
+    doPut(getPluginServerRoute(getState()) + '/team/' + teamId + '/card/' + laneId + '/' + card.id, card);
+};
+
 export const moveChannelCard = (channelId, cardId, sourceLaneId, targetLaneId, position) => async (dispatch, getState) => {
     doPost(getPluginServerRoute(getState()) + '/channel/' + channelId + '/card/' + cardId + '/move', {sourceLaneId, targetLaneId, position});
 };

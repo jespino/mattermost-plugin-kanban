@@ -114,6 +114,12 @@ func (p *Plugin) handleCardUpdate(c *plugin.Context, w http.ResponseWriter, r *h
 		return
 	}
 
+	if _, ok := board.Lanes[card.LaneID]; !ok {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Unable to update card: Card not found"))
+		return
+	}
+
 	if _, ok := board.Lanes[card.LaneID].Cards[card.ID]; !ok {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Unable to update card: Card not found"))
@@ -215,6 +221,8 @@ func (p *Plugin) handleCardMove(c *plugin.Context, w http.ResponseWriter, r *htt
 	}
 
 	card, ok := board.Lanes[cardMovement.SourceLaneID].Cards[cardID]
+	card.UpdatedAt = time.Now().Unix()
+	card.LaneID = cardMovement.TargetLaneID
 	if !ok {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("Unable to move card: Card not found"))

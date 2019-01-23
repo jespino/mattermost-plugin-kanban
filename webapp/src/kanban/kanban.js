@@ -4,7 +4,7 @@ import Board from 'react-trello';
 
 import Card from './card';
 import CreateLaneModal from './create_lane_modal';
-import CreateCardModal from './create_card_modal';
+import CreateOrEditCardModal from './create_or_edit_card_modal';
 import ConfirmModal from './confirm_modal';
 import LaneHeader from './lane_header';
 
@@ -22,6 +22,8 @@ export default class Kanban extends Component {
             createTeamCard: PropTypes.func.isRequired,
             deleteChannelCard: PropTypes.func.isRequired,
             deleteTeamCard: PropTypes.func.isRequired,
+            updateChannelCard: PropTypes.func.isRequired,
+            updateTeamCard: PropTypes.func.isRequired,
             moveChannelCard: PropTypes.func.isRequired,
             moveTeamCard: PropTypes.func.isRequired,
             createChannelLane: PropTypes.func.isRequired,
@@ -37,6 +39,7 @@ export default class Kanban extends Component {
 
     state = {
         creatingLane: false,
+        updatingCard: null,
         deletingCard: false,
         deletingCardId: null,
         deletingCardLaneId: null,
@@ -171,12 +174,21 @@ export default class Kanban extends Component {
 
     updateLaneTitle = (laneId, newTitle) => {
         const lane = {...this.props.board.lanes[laneId], title: newTitle};
-        console.log(lane);
         if (this.props.channelId) {
             this.props.actions.updateChannelLane(this.props.channelId, lane);
         } else {
             this.props.actions.updateTeamLane(this.props.teamId, lane);
         }
+    }
+
+    updateCard = (card) => {
+        const newCard = {...this.props.board.lanes[card.laneId].cards[card.id], title: card.title, description: card.description};
+        if (this.props.channelId) {
+            this.props.actions.updateChannelCard(this.props.channelId, newCard.laneId, newCard);
+        } else {
+            this.props.actions.updateTeamCard(this.props.teamId, newCard.laneId, newCard);
+        }
+        this.setState({updatingCard: null});
     }
 
     render() {
@@ -207,6 +219,12 @@ export default class Kanban extends Component {
                     onClose={this.closeCreatingLaneModal}
                     onCreate={this.createLane}
                 />
+                {this.state.updatingCard &&
+                    <CreateOrEditCardModal
+                        card={this.state.updatingCard}
+                        onAdd={this.updateCard}
+                        onCancel={() => this.setState({updatingCard: null})}
+                    />}
                 <ConfirmModal
                     title='Delete card'
                     text='Are you sure you want to delete this card?'
@@ -232,7 +250,7 @@ export default class Kanban extends Component {
                     style={{backgroundColor: 'white'}}
                     customCardLayout={true}
                     addCardLink={addCardLink}
-                    newCardTemplate={<CreateCardModal/>}
+                    newCardTemplate={<CreateOrEditCardModal/>}
                     onCardAdd={this.onCardAdd}
                     handleDragEnd={this.onDropCard}
                     handleLaneDragEnd={this.onDropLane}
@@ -243,7 +261,10 @@ export default class Kanban extends Component {
                         />
                     }
                 >
-                    <Card onDeleteClicked={this.openDeletingCardModal}/>
+                    <Card
+                        onDeleteClicked={this.openDeletingCardModal}
+                        onEditClicked={(card) => this.setState({updatingCard: card})}
+                    />
                 </Board>
             </div>
         );

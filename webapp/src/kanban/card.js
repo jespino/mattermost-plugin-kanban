@@ -9,10 +9,20 @@ export default class Card extends Component {
         description: PropTypes.string,
         label: PropTypes.string,
         onDeleteClicked: PropTypes.func,
+        onEditClicked: PropTypes.func,
     }
 
     onDeleteClicked = () => {
         this.props.onDeleteClicked(this.props.id, this.props.laneId);
+    }
+
+    onEditClicked = () => {
+        this.props.onEditClicked({
+            id: this.props.id,
+            laneId: this.props.laneId,
+            title: this.props.title,
+            description: this.props.description,
+        });
     }
 
     render() {
@@ -31,13 +41,18 @@ export default class Card extends Component {
                 >
                     <div style={{fontSize: 14, fontWeight: 'bold'}}>{title}</div>
                     {onDeleteClicked &&
-                        <div
-                            style={{fontSize: 11}}
-                            onClick={this.onDeleteClicked}
-                        >
+                        <div style={{fontSize: 11}}>
+                            <i
+                                className='fa fa-pencil'
+                                title='Remove card'
+                                onClick={this.onEditClicked}
+                                style={{marginLeft: '6px'}}
+                            />
                             <i
                                 className='fa fa-remove'
                                 title='Remove card'
+                                onClick={this.onDeleteClicked}
+                                style={{marginLeft: '6px'}}
                             />
                         </div>}
                 </header>

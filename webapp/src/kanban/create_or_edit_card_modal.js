@@ -3,15 +3,25 @@ import React, {Component} from 'react';
 import {PropTypes} from 'prop-types';
 import {Modal} from 'react-bootstrap';
 
-export default class CreateCardModal extends Component {
+export default class CreateOrEditCardModal extends Component {
     static propTypes = {
         onAdd: PropTypes.func.isReuquired,
         onCancel: PropTypes.func.isRequired,
+        card: PropTypes.object,
     }
 
     constructor(props) {
         super(props);
-        this.state = {};
+        if (props.card) {
+            this.state = {
+                id: props.card.id,
+                laneId: props.card.laneId,
+                title: props.card.title,
+                description: props.card.description,
+            };
+        } else {
+            this.state = {};
+        }
     }
 
     updateField = (field, evt) => {
@@ -42,6 +52,7 @@ export default class CreateCardModal extends Component {
                 <Modal.Body>
                     <div>
                         <input
+                            style={{width: '100%', borderRadius: '3px', border: '1px solid #ccc', padding: '5px', marginBottom: '10px'}}
                             type='text'
                             value={this.state.title}
                             onChange={(evt) => this.updateField('title', evt)}
@@ -50,8 +61,11 @@ export default class CreateCardModal extends Component {
                     </div>
                     <div>
                         <textarea
+                            style={{width: '100%', borderRadius: '3px', border: '1px solid #ccc', padding: '5px'}}
                             onChange={(evt) => this.updateField('description', evt)}
+                            value={this.state.description}
                             placeholder='Description'
+                            rows={8}
                         />
                     </div>
                 </Modal.Body>
@@ -68,7 +82,7 @@ export default class CreateCardModal extends Component {
                         className='btn btn-primary'
                         onClick={this.onCreateClicked}
                     >
-                        {'Create'}
+                        {this.props.card ? 'Edit' : 'Create'}
                     </button>
                 </Modal.Footer>
             </Modal>
