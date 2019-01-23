@@ -16,6 +16,8 @@ export default class Kanban extends Component {
         channelId: PropTypes.string,
         board: PropTypes.object,
         actions: PropTypes.shape({
+            setAppActive: PropTypes.func.isRequired,
+            selectChannel: PropTypes.func.isRequired,
             getChannelBoard: PropTypes.func.isRequired,
             getTeamBoard: PropTypes.func.isRequired,
             createChannelCard: PropTypes.func.isRequired,
@@ -50,8 +52,12 @@ export default class Kanban extends Component {
     componentDidMount() {
         if (this.props.channelId) {
             this.props.actions.getChannelBoard(this.props.channelId);
+            this.props.actions.selectChannel(this.props.channelId);
+            this.props.actions.setAppActive('channel');
         } else {
             this.props.actions.getTeamBoard(this.props.teamId);
+            this.props.actions.selectChannel(null);
+            this.props.actions.setAppActive('team');
         }
     }
 
@@ -59,10 +65,18 @@ export default class Kanban extends Component {
         if (prevProps.channelId !== this.props.channelId || prevProps.teamId !== this.props.teamId) {
             if (this.props.channelId) {
                 this.props.actions.getChannelBoard(this.props.channelId);
+                this.props.actions.selectChannel(this.props.channelId);
+                this.props.actions.setAppActive('channel');
             } else {
                 this.props.actions.getTeamBoard(this.props.teamId);
+                this.props.actions.selectChannel(null);
+                this.props.actions.setAppActive('team');
             }
         }
+    }
+
+    componentWillUnmount() {
+        this.props.actions.setAppActive('');
     }
 
     reformatBoard = (board) => {

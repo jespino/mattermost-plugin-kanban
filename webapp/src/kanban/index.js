@@ -2,6 +2,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {getChannelByName} from 'mattermost-redux/selectors/entities/channels';
 import {getTeamByName} from 'mattermost-redux/selectors/entities/teams';
+import {selectChannel} from 'mattermost-redux/actions/channels';
 
 import {getBoard} from '../selectors';
 import {
@@ -10,6 +11,7 @@ import {
     updateChannelCard, updateTeamCard,
     createChannelLane, createTeamLane, moveChannelLane, moveTeamLane,
     deleteChannelLane, deleteTeamLane, updateChannelLane, updateTeamLane,
+    setAppActive,
 } from '../actions';
 
 import Kanban from './kanban';
@@ -25,6 +27,8 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
+            setAppActive,
+            selectChannel,
             getChannelBoard,
             getTeamBoard,
             createChannelCard,

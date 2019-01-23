@@ -3,7 +3,7 @@ import request from 'superagent';
 import {getConfig} from 'mattermost-redux/selectors/entities/general';
 
 import {id as pluginId} from './manifest';
-import {BOARD_CHANGED} from './action_types';
+import {BOARD_CHANGED, SET_APP_ACTIVE} from './action_types';
 
 const doGet = async (url, body, headers = {}) => {
     headers['X-Requested-With'] = 'XMLHttpRequest';
@@ -166,4 +166,11 @@ export const updateChannelLane = (channelId, lane) => async (dispatch, getState)
 
 export const updateTeamLane = (teamId, lane) => async (dispatch, getState) => {
     doPut(getPluginServerRoute(getState()) + '/team/' + teamId + '/lane/' + lane.id, lane);
+};
+
+export const setAppActive = (active) => async (dispatch) => {
+    dispatch({
+        type: SET_APP_ACTIVE,
+        data: active,
+    });
 };

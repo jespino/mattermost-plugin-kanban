@@ -1,6 +1,4 @@
 import React from 'react';
-import {PropTypes} from 'prop-types';
-import {Link} from 'react-router-dom';
 
 import {id as pluginId} from './manifest';
 
@@ -9,32 +7,14 @@ import {getBoard} from './selectors';
 import {BOARD_CHANGED} from './action_types';
 
 import Kanban from './kanban';
-
-function KanbanAppLink(props) {
-    return (
-        <li>
-            <Link
-                className='sidebar-item'
-                to={'/' + props.teamName + '/apps/kanban'}
-            >
-                <span className='icon'><i className='fa fa-trello'/></span>
-                <span className='sidebar-item__name'>
-                    <span>{'Team Kanban'}</span>
-                </span>
-            </Link>
-        </li>
-    );
-}
-
-KanbanAppLink.propTypes = {
-    teamName: PropTypes.string.isRequired,
-};
+import KanbanAppLink from './kanban_app_link';
+import ChannelHeaderIcon from './channel_header_icon';
 
 export default class Plugin {
     initialize(registry, store, browserHistory) {
         const state = store.getState();
         registry.registerChannelHeaderButtonAction(
-            <i className='fa fa-trello'/>,
+            <ChannelHeaderIcon/>,
             (channel) => {
                 if (browserHistory.location.pathname === '/' + state.entities.teams.teams[channel.team_id].name + '/channel-apps/' + channel.name + '/kanban') {
                     browserHistory.push('/' + state.entities.teams.teams[channel.team_id].name + '/channels/' + channel.name);

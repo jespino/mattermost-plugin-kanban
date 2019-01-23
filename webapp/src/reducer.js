@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 
-import {BOARD_CHANGED} from './action_types';
+import {BOARD_CHANGED, SET_APP_ACTIVE} from './action_types';
 
 const board = (state = null, action) => {
     switch (action.type) {
@@ -12,7 +12,18 @@ const board = (state = null, action) => {
     }
 };
 
+const active = (state = false, action) => {
+    switch (action.type) {
+    case SET_APP_ACTIVE:
+        return action.data;
+
+    default:
+        return state;
+    }
+};
+
 export default combineReducers({
     board,
+    active,
 });
 
