@@ -83,6 +83,7 @@ export default class Kanban extends Component {
             title: cardData.title,
             description: cardData.description,
             lane_id: laneId,
+            data: cardData.metadata,
         };
         if (this.props.channelId) {
             this.props.actions.createChannelCard(this.props.channelId, card);
@@ -183,6 +184,7 @@ export default class Kanban extends Component {
 
     updateCard = (card) => {
         const newCard = {...this.props.board.lanes[card.laneId].cards[card.id], title: card.title, description: card.description};
+        newCard.data = {...newCard.data, ...card.metadata};
         if (this.props.channelId) {
             this.props.actions.updateChannelCard(this.props.channelId, newCard.laneId, newCard);
         } else {

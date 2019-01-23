@@ -30,15 +30,16 @@
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
+    "js-sha1": "^0.6.0",
     "leaflet": "^1.4.0",
     "mattermost-redux": "^5.7.0",
     "react": "16.4.1",
+    "react-bootstrap": "0.32.4",
     "react-dom": "^16.7.0",
     "react-leaflet": "^2.2.0",
     "react-redux": "5.0.7",
     "react-router-dom": "^4.3.1",
     "react-trello": "^2.0.9",
-    "react-bootstrap": "0.32.4",
     "redux": "4.0.0",
     "superagent": "^4.1.0",
     "the-awesome-cheat-sheet": "git+https://github.com/ZiedBeta/the-awesome-cheat-sheet.git"

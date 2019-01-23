@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
 import {PropTypes} from 'prop-types';
+import sha1 from 'js-sha1';
+
+function tagToColor(tag) {
+    const hash = sha1(tag).slice(0, 6);
+    return '#' + hash.replace('8', '0').replace('9', '1').replace('a', '2').replace('b', '3').replace('c', '4').replace('d', '5').replace('e', '6').replace('f', '7');
+}
 
 export default class Card extends Component {
     static propTypes = {
@@ -8,6 +14,7 @@ export default class Card extends Component {
         title: PropTypes.string.isRequired,
         description: PropTypes.string,
         label: PropTypes.string,
+        metadata: PropTypes.object,
         onDeleteClicked: PropTypes.func,
         onEditClicked: PropTypes.func,
     }
@@ -22,11 +29,12 @@ export default class Card extends Component {
             laneId: this.props.laneId,
             title: this.props.title,
             description: this.props.description,
+            metadata: this.props.metadata,
         });
     }
 
     render() {
-        const {title, label, description, onDeleteClicked} = this.props;
+        const {title, metadata, description, onDeleteClicked} = this.props;
         return (
             <div>
                 <header
@@ -56,12 +64,17 @@ export default class Card extends Component {
                             />
                         </div>}
                 </header>
-                {(description || label) &&
+                {(description || metadata.tags) &&
                     <div style={{fontSize: 12, color: '#BD3B36'}}>
-                        {label && <div style={{fontSize: 11, backgroundColor: '#ccc', borderRadious: '5px'}}>{label}</div>}
                         {description &&
                             <div style={{padding: 5}}>
                                 <i>{description}</i>
+                            </div>}
+                        {metadata.tags && metadata.tags.length > 0 &&
+                            <div style={{display: 'flex', margin: 5}}>
+                                {metadata.tags.map((tag) => (
+                                    <div style={{fontSize: 11, padding: '5px', marginRight: '5px', backgroundColor: tagToColor(tag), color: 'white', borderRadius: '5px'}}>{tag}</div>
+                                ))}
                             </div>}
                     </div>}
             </div>

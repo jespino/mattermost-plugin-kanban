@@ -18,14 +18,25 @@ export default class CreateOrEditCardModal extends Component {
                 laneId: props.card.laneId,
                 title: props.card.title,
                 description: props.card.description,
+                metadata: {
+                    tags: (props.card.metadata && props.card.metadata.tags) || [],
+                },
             };
         } else {
-            this.state = {};
+            this.state = {
+                metadata: {
+                    tags: [],
+                },
+            };
         }
     }
 
     updateField = (field, evt) => {
         this.setState({[field]: evt.target.value});
+    }
+
+    updateTags = (evt) => {
+        this.setState({metadata: {...this.state.metadata, tags: evt.target.value.split(',').map((s) => s.trim())}});
     }
 
     onCreateClicked = () => {
@@ -57,6 +68,15 @@ export default class CreateOrEditCardModal extends Component {
                             value={this.state.title}
                             onChange={(evt) => this.updateField('title', evt)}
                             placeholder='Title'
+                        />
+                    </div>
+                    <div>
+                        <input
+                            style={{width: '100%', borderRadius: '3px', border: '1px solid #ccc', padding: '5px', marginBottom: '10px'}}
+                            type='text'
+                            value={this.state.metadata.tags.join(',')}
+                            onChange={this.updateTags}
+                            placeholder='Tags'
                         />
                     </div>
                     <div>
