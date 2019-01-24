@@ -29,4 +29,3 @@ export default combineReducers({
     board,
     active,
 });
-

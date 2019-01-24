@@ -6,7 +6,7 @@ import {id as pluginId} from './manifest';
 
 import reducer from './reducer';
 import {getBoard} from './selectors';
-import {BOARD_CHANGED} from './action_types';
+import {getChannelBoard, getTeamBoard} from './actions';
 
 import Kanban from './kanban';
 import KanbanAppLink from './kanban_app_link';
@@ -39,12 +39,13 @@ export default class Plugin {
             'custom_' + pluginId + '_board_changed',
             (message) => {
                 const s = store.getState();
-                const board = JSON.parse(message.data.board);
-                if (board.id === (getBoard(s) || {}).id) {
-                    store.dispatch({
-                        type: BOARD_CHANGED,
-                        data: board,
-                    });
+                const {boardId, channelId, teamId} = message.data;
+                if (boardId === (getBoard(s) || {}).id) {
+                    if (channelId) {
+                        store.dispatch(getChannelBoard(channelId));
+                    } else {
+                        store.dispatch(getTeamBoard(teamId));
+                    }
                 }
             },
         );
