@@ -1,0 +1,31 @@
+.kanban :global(.react-trello-lane) > div {
+    padding-bottom: 10px;
+}
+
+.kanban :global(.react-trello-lane) {
+    border-radius: 0;
+}
+
+.kanban :global(.react-trello-card) {
+    border-radius: 0;
+}
+
+.kanban :global(.react-trello-lane .fa) {
+    opacity: 0;
+}
+
+.kanban :global(.react-trello-lane:hover .fa) {
+    opacity: .6;
+}
+
+.addLaneButton {
+    float: right;
+    margin: 10px;
+    border-radius: 0px;
+}
+
+.addCardButton {
+    float: right;
+    margin-top: 10px;
+    border-radius: 0px;
+}

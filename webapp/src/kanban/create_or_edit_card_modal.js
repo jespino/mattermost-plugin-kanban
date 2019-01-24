@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import {PropTypes} from 'prop-types';
 import {Modal} from 'react-bootstrap';
 
+import styles from './create_or_edit_card_modal.css';
+
 export default class CreateOrEditCardModal extends Component {
     static propTypes = {
         onAdd: PropTypes.func.isReuquired,
@@ -60,10 +62,10 @@ export default class CreateOrEditCardModal extends Component {
                         {'Create Card'}
                     </h4>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className={styles.modalBody}>
                     <div>
                         <input
-                            style={{width: '100%', borderRadius: '3px', border: '1px solid #ccc', padding: '5px', marginBottom: '10px'}}
+                            className={styles.input}
                             type='text'
                             value={this.state.title}
                             onChange={(evt) => this.updateField('title', evt)}
@@ -72,7 +74,7 @@ export default class CreateOrEditCardModal extends Component {
                     </div>
                     <div>
                         <input
-                            style={{width: '100%', borderRadius: '3px', border: '1px solid #ccc', padding: '5px', marginBottom: '10px'}}
+                            className={styles.input}
                             type='text'
                             value={this.state.metadata.tags.join(',')}
                             onChange={this.updateTags}
@@ -81,7 +83,7 @@ export default class CreateOrEditCardModal extends Component {
                     </div>
                     <div>
                         <textarea
-                            style={{width: '100%', borderRadius: '3px', border: '1px solid #ccc', padding: '5px'}}
+                            className={styles.input}
                             onChange={(evt) => this.updateField('description', evt)}
                             value={this.state.description}
                             placeholder='Description'

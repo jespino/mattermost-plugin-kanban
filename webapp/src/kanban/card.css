@@ -1,0 +1,53 @@
+.card:hover .icons {
+    opacity: .5;
+}
+
+.header {
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 0;
+    margin-bottom: 0;
+}
+
+.headerWithDescription {
+    composes: header;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.icons {
+    font-size: 10px;
+    opacity: 0;
+}
+
+.icons i {
+    margin-left: 6px;
+    padding: 5px 0;
+}
+
+.body {
+    font-size: 11px;
+}
+
+.description {
+    padding: 5px;
+}
+
+.tags {
+    display: flex;
+    margin: 5px;
+}
+
+.tags div {
+    font-size: 11px;
+    padding: 3px 5px;
+    margin-right: 5px;
+    color: white;
+}

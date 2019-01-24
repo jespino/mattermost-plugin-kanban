@@ -10,6 +10,8 @@ import CreateOrEditCardModal from './create_or_edit_card_modal';
 import ConfirmModal from './confirm_modal';
 import LaneHeader from './lane_header';
 
+import styles from './kanban.css';
+
 export default class Kanban extends Component {
     static propTypes = {
         teamName: PropTypes.string.isRequired,
@@ -220,18 +222,16 @@ export default class Kanban extends Component {
 
         const addCardLink = (
             <button
-                className='btn btn-primary'
-                style={{float: 'right', marginTop: 10}}
+                className={'btn btn-primary ' + styles.addCardButton}
             >
                 {'Add Card'}
             </button>
         );
 
         return (
-            <div>
+            <div className={styles.kanban}>
                 <button
-                    className='btn btn-primary'
-                    style={{float: 'right', margin: 10}}
+                    className={'btn btn-primary ' + styles.addLaneButton}
                     onClick={this.openCreatingLaneModal}
                 >
                     {'Add Lane'}

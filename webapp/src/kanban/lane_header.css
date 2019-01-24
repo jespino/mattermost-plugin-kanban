@@ -1,0 +1,23 @@
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.title {
+    flex-grow: 1;
+    font-size: 14px;
+}
+
+.titleInput {
+    flex-grow: 1;
+    border: 0;
+    color: #777;
+    font-size: 14px;
+    padding: 2px 5px;
+}
+
+.icon {
+    display: inline-block;
+    margin-left: 6px;
+    cursor: pointer;
+}

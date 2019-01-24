@@ -3,6 +3,8 @@ import React, {Component} from 'react';
 import {PropTypes} from 'prop-types';
 import {Modal} from 'react-bootstrap';
 
+import styles from './create_lane_modal.css';
+
 export default class CreateLaneModal extends Component {
     static propTypes = {
         show: PropTypes.bool.isRequired,
@@ -48,7 +50,7 @@ export default class CreateLaneModal extends Component {
                 <Modal.Body>
                     <div>
                         <input
-                            style={{width: '100%', borderRadius: '3px', border: '1px solid #ccc', padding: '5px'}}
+                            className={styles.input}
                             type='text'
                             onChange={this.setLaneName}
                             value={this.state.laneName}
