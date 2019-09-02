@@ -11,15 +11,15 @@ export default class KanbanAppLink extends Component {
     render() {
         return (
             <li className={this.props.active && 'active'}>
-                <Link
+                <a
                     className='sidebar-item'
-                    to={'/' + this.props.teamName + '/apps/kanban'}
+                    href={'/' + this.props.teamName + '/apps/kanban'}
                 >
                     <span className='icon'><i className='fa fa-trello'/></span>
                     <span className='sidebar-item__name'>
                         <span>{'Team Kanban'}</span>
                     </span>
-                </Link>
+                </a>
             </li>
         );
     }

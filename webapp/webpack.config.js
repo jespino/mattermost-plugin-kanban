@@ -20,20 +20,23 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        sourceMaps: true,
+                        plugins: [
+                            '@babel/plugin-proposal-class-properties',
+                            '@babel/plugin-syntax-dynamic-import',
+                        ],
                         presets: [
                             ['@babel/preset-env', {
                                 targets: {
                                     chrome: 66,
                                     firefox: 60,
                                     edge: 42,
-                                    ie: 11,
                                     safari: 12,
                                 },
                                 modules: false,
                                 debug: false,
                                 useBuiltIns: 'usage',
                                 shippedProposals: true,
+                                corejs: 3,
                             }],
                             ['@babel/preset-react', {
                                 useBuiltIns: true,
@@ -57,7 +60,6 @@ module.exports = {
                         options: {
                             importLoaders: 1,
                             modules: true,
-                            localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
                         },
                     },
                 ],
@@ -68,6 +70,8 @@ module.exports = {
         react: 'React',
         redux: 'Redux',
         'react-redux': 'ReactRedux',
+        'prop-types': 'PropTypes',
+        'react-bootstrap': 'ReactBootstrap',
     },
     output: {
         path: path.join(__dirname, '/dist'),
