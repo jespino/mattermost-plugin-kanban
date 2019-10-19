@@ -9,66 +9,50 @@ const doGet = async (url, body, headers = {}) => {
     headers['X-Requested-With'] = 'XMLHttpRequest';
     headers['X-Timezone-Offset'] = new Date().getTimezoneOffset();
 
-    try {
-        const response = await request.
-            get(url).
-            set(headers).
-            accept('application/json');
+    const response = await request.
+        get(url).
+        set(headers).
+        accept('application/json');
 
-        return response.body;
-    } catch (err) {
-        throw err;
-    }
+    return response.body;
 };
 
 const doPost = async (url, body, headers = {}) => {
     headers['X-Requested-With'] = 'XMLHttpRequest';
     headers['X-Timezone-Offset'] = new Date().getTimezoneOffset();
 
-    try {
-        const response = await request.
-            post(url).
-            send(body).
-            set(headers).
-            type('application/json').
-            accept('application/json');
-        return response.body;
-    } catch (err) {
-        throw err;
-    }
+    const response = await request.
+        post(url).
+        send(body).
+        set(headers).
+        type('application/json').
+        accept('application/json');
+    return response.body;
 };
 
 const doPut = async (url, body, headers = {}) => {
     headers['X-Requested-With'] = 'XMLHttpRequest';
     headers['X-Timezone-Offset'] = new Date().getTimezoneOffset();
 
-    try {
-        const response = await request.
-            put(url).
-            send(body).
-            set(headers).
-            type('application/json').
-            accept('application/json');
-        return response.body;
-    } catch (err) {
-        throw err;
-    }
+    const response = await request.
+        put(url).
+        send(body).
+        set(headers).
+        type('application/json').
+        accept('application/json');
+    return response.body;
 };
 
 const doDelete = async (url, headers = {}) => {
     headers['X-Requested-With'] = 'XMLHttpRequest';
     headers['X-Timezone-Offset'] = new Date().getTimezoneOffset();
 
-    try {
-        const response = await request.
-            delete(url).
-            set(headers).
-            type('application/json').
-            accept('application/json');
-        return response.body;
-    } catch (err) {
-        throw err;
-    }
+    const response = await request.
+        delete(url).
+        set(headers).
+        type('application/json').
+        accept('application/json');
+    return response.body;
 };
 
 export const getPluginServerRoute = (state) => {

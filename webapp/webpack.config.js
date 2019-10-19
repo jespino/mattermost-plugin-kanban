@@ -23,6 +23,7 @@ module.exports = {
                         plugins: [
                             '@babel/plugin-proposal-class-properties',
                             '@babel/plugin-syntax-dynamic-import',
+                            'babel-plugin-react-css-modules',
                         ],
                         presets: [
                             ['@babel/preset-env', {
@@ -41,11 +42,6 @@ module.exports = {
                             ['@babel/preset-react', {
                                 useBuiltIns: true,
                             }],
-                        ],
-                        plugins: [
-                            '@babel/plugin-proposal-class-properties',
-                            '@babel/plugin-syntax-dynamic-import',
-                            'babel-plugin-react-css-modules',
                         ],
                     },
                 },
